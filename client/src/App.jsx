@@ -7,6 +7,7 @@ import {Projects} from "./Pages/projects.jsx"
 import {Blog} from "./Pages/blog.jsx"
 import {Resume} from "./Pages/resume.jsx"
 import {Home} from "./Pages/Home.jsx"
+import {Login} from "./Pages/login.jsx"
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
             <Route path="/projects" element={<Projects/>}/>
             <Route path="/blog" element={<Blog/>}/>
             <Route path="/resume" element={<Resume/>}/>
+            <Route path="/login" element={<Login />} />
           </Routes>
         </div>
   )

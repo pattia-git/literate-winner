@@ -3,6 +3,12 @@ import {NavLink} from "react-router"
 import "./navbar.css";
 
 function navbar(){
+    
+    
+    const Login = () => {
+        setIsVisible(!isVisible);
+    };
+    
     return(
         <nav>
             <header id="navbar">
@@ -19,12 +25,13 @@ function navbar(){
                         <NavLink to="/resume" id="Link">Resume</NavLink>
                     </div>
                     <div id="Login">
-                        Login
+                        <NavLink to="/login" id="Link">Login</NavLink>
                     </div>
                 </div>
 
             </header>
-        </nav>)
+        </nav>
+    )
 }
 
 export default navbar;
