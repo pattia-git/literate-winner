@@ -1,19 +1,20 @@
+import {NavLink} from "react-router"
+
 function homePage(){
     return(
         <>
             <header id="navbar">
                 <div id="general-info">
-                    <p>logo</p>
-                    <h1>Namn</h1>
-                    <p>Min sida</p>
+                    <h1 id="title">Homepage</h1>
                 </div>
-                <div>
-
+                <div id="links">
+                    <NavLink to="">About me</NavLink>
+                    <NavLink to="">Projects</NavLink>
+                    <NavLink to="">Blog</NavLink>
+                    <NavLink to="">Contact</NavLink>
+                    <NavLink to="">Resume</NavLink>
                 </div>
             </header>
-            <div>
-                <h1>Hejsan</h1>
-            </div>
         </>)
 }
 

@@ -17,13 +17,28 @@
 h1{
   margin: 0;
   font-size: 3rem;
+  text-align: center;
+}
+body{
+  margin: 0;
+  padding: 0;
 }
 
 /* -- Nav bar -- */
-#general-info{
+
+#title{
+  text-align: center;
+}
+
+#links{
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   margin: 0 2rem;
 }
+
+#navbar{
+  border-bottom: solid 1px rgba(255,255,255, 0.3);
+  padding-bottom: 1rem;
+}
+
 
