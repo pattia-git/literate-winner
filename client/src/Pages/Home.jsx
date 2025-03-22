@@ -2,9 +2,9 @@
 
 export const Home = () => {
     return(
-        <div>
+        <div id="Page">
             <div>
-                Home
+                Coming soon...
             </div>
             
         </div>

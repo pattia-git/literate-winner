@@ -22,23 +22,17 @@ h1{
 body{
   margin: 0;
   padding: 0;
+  
 }
 
-/* -- Nav bar -- */
-
-#title{
-  text-align: center;
+html{
+  overflow-y: scroll;
 }
 
-#links{
-  display: flex;
-  justify-content: space-between;
-  margin: 0 2rem;
+#Page{
+  margin: 2rem;
 }
 
-#navbar{
-  border-bottom: solid 1px rgba(255,255,255, 0.3);
-  padding-bottom: 1rem;
-}
+
 
 

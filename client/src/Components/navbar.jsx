@@ -6,13 +6,16 @@ function navbar(){
     return(
         <nav>
             <header id="navbar">
-                <NavLink to="/">Home</NavLink>
+                <div id="title">
+                    <NavLink to="/" id="Homepage">My website</NavLink>
+                </div>
+                
                 <div id="links">
-                    <NavLink to="/about">About me</NavLink>
-                    <NavLink to="/projects">Projects</NavLink>
-                    <NavLink to="/blog">Blog</NavLink>
-                    <NavLink to="/contact">Contact</NavLink>
-                    <NavLink to="/resume">Resume</NavLink>
+                    <NavLink to="/about" id="Link">About me</NavLink>
+                    <NavLink to="/projects" id="Link">Projects</NavLink>
+                    <NavLink to="/blog" id="Link">Blog</NavLink>
+                    <NavLink to="/contact" id="Link">Contact</NavLink>
+                    <NavLink to="/resume" id="Link">Resume</NavLink>
                 </div>
             </header>
         </nav>)

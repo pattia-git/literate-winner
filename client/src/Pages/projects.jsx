@@ -1,8 +1,8 @@
 ﻿import React from "react";
 export const Projects = () => {
     return(
-        <div>
-            <div>Projects</div>
+        <div id="Page">
+            <div>Coming soon...</div>
         </div>
     )
 };
