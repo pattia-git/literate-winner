@@ -2,7 +2,10 @@
 export const Blog = () => {
     return(
         <div id="Page">
-            <div>Coming soon...</div>
+            <div>
+                <h2>Blog</h2>
+                Coming soon...
+            </div>
         </div>
     )
 };

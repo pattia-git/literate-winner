@@ -2,7 +2,8 @@
 export const Contact = () => {
     return(
         <div id="Page">
-            Coming soon...
+            <h2>Contact</h2>
+            <div>Coming soon...</div>
         </div>
     )
 };
