@@ -1,5 +1,8 @@
 ﻿import React from "react";
-export const Projects = () => {
+
+export const Projects = async () => {
+    
+    
     return(
         <div id="Page">
             <h2>Projects</h2>

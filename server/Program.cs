@@ -11,18 +11,19 @@ Database database = new();
 var db = database.Connection();
 Queries queries = new(db);
 LoginDetails LoginDetails = new();
+User user = new();
 
 var builder = WebApplication.CreateBuilder(args);
 
 // här konfigureras sessionshantering
-builder.Services.AddDistributedMemoryCache();  // bra att veta att detta använder minnescache för sessioner
+builder.Services.AddDistributedMemoryCache(); // ✅ Required for session storage
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(10); //om du är inaktiv så kommer du bli utloggad efter en vis tid har satt en minut för tester
-    options.Cookie.HttpOnly = true; // Skyddar så att cookien inte kan nås via js
-    options.Cookie.IsEssential = true; // Cookien krävs för att sessionen ska kunna fungera
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // cookien skickas bara via https
-    options.Cookie.SameSite = SameSiteMode.Strict; // förhindrar att cookien skickas vid externa förfrågningar
+    options.IdleTimeout = TimeSpan.FromHours(24); // ✅ Increase timeout
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.None; // ✅ Allow HTTP (since you’re not using HTTPS)
+    options.Cookie.SameSite = SameSiteMode.Lax; // ✅ Prevent session loss in some browsers
 });
 
 // här konfiguerar vi autentisering med cookies 
@@ -45,8 +46,6 @@ app.UseAuthorization();  // aktiverar behörighetshantering
 
 app.MapPost("/api/login", async (HttpContext context) =>
 {
-    Console.WriteLine("hejsan");
-    
     using var reader = new StreamReader(context.Request.Body);
     var body = await reader.ReadToEndAsync();
     var loginData = JsonSerializer.Deserialize<LoginRequest>(body);
@@ -67,7 +66,7 @@ app.MapPost("/api/login", async (HttpContext context) =>
                     new[] {
                         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),  //sparar användarens Id
                         new Claim(ClaimTypes.Email, user.Email), // sparar användarens e-post 
-                        new Claim("role", user.Role), // sparar om användaren är admin eller inte
+                        new Claim("role", user.Role),
                         new Claim("username", user.Username) // sparar om användaren är admin eller inte
 
                     },
@@ -83,6 +82,7 @@ app.MapPost("/api/login", async (HttpContext context) =>
             context.Session.SetString("Role", user.Role);
             context.Session.SetString("Username", user.Username);
             
+            Console.WriteLine("Queries");
             // Retunerar inloggningsdata
             return Results.Ok(new { 
                 user = new {
@@ -99,5 +99,46 @@ app.MapPost("/api/login", async (HttpContext context) =>
 }
     
     );
+
+app.MapGet("/api/checksession", async (HttpContext context) =>
+{
+    var userId = context.Session.GetString("UserId");
+    var email = context.Session.GetString("UserEmail");
+    var fname = context.Session.GetString("Firstname");
+    var Lname = context.Session.GetString("Lastname");
+    var username = context.Session.GetString("Username");
+    var role = context.Session.GetString("Role");
+
+    if (userId is null) // More explicit check for null
+    {
+        return Results.Unauthorized();
+    }
+
+    return Results.Ok(new
+    {
+        username,
+        userId,
+        email,
+        role,
+        fname,
+        Lname
+    });
+});
+
+app.MapDelete("/api/clear-session", async (HttpContext context) =>
+{
+    await queries.ClearSession(context);
+    return Results.Ok();
+});
+
+app.MapPost("/api/register", async (HttpContext context) =>
+{
+    using var reader = new StreamReader(context.Request.Body);
+    var body = await reader.ReadToEndAsync();
+    var UserData = JsonSerializer.Deserialize<User?>(body);
+
+    queries.registerNewUser(UserData);
+});
+
 
 app.Run();

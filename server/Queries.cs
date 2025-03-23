@@ -1,7 +1,4 @@
 ﻿using System.Text.Json;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Diagnostics;
 using Npgsql;
 using server.Classes;
 
@@ -18,13 +15,8 @@ public class Queries
 
     public async Task<User?> ValidateUser(string email, string password)
     {
-        
-        Console.WriteLine(password);
         const string sql =
             @"SELECT users.id, users.firstname, users.lastname, users.email, r.role, users.username, users.password FROM users INNER JOIN public.roles r on r.id = users.role WHERE users.email = @email and users.password = @password";
-
-        Console.WriteLine(email);
-        Console.WriteLine(password);
         await using var cmd = _db.CreateCommand(sql);
         cmd.Parameters.AddWithValue("@email", email.ToLower());
         cmd.Parameters.AddWithValue("@password", password);
@@ -55,5 +47,32 @@ public class Queries
             return null;
 
         }
+    }
+    
+    public async Task<IResult> ClearSession(HttpContext context)
+    {
+        Console.WriteLine("ClearSession is called..Clearing session");
+        // Denna rad kan skrivas både med Task.Run() eller utan.
+        await Task.Run(context.Session.Clear);
+        return Results.Ok("Session cleared");
+    }
+
+    public async Task<IResult> registerNewUser(User user)
+    {
+        Console.WriteLine("queries");
+        Console.WriteLine(user.Password);
+        const string sql =
+            @"INSERT INTO users (firstname, lastname, email, role, username, password) 
+                values (@firstname, @lastname, @email, @role, @username, @password)";
+        await using var cmd = _db.CreateCommand(sql);
+        cmd.Parameters.AddWithValue("@firstname", user.Firstname);
+        cmd.Parameters.AddWithValue("@lastname", user.Lastname);
+        cmd.Parameters.AddWithValue("@email", user.Email);
+        cmd.Parameters.AddWithValue("@role", 2);
+        cmd.Parameters.AddWithValue("@username", user.Username);
+        cmd.Parameters.AddWithValue("@password", user.Password);
+        
+        await cmd.ExecuteNonQueryAsync();
+        return Results.Ok();
     }
 }
