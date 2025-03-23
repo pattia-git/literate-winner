@@ -33,6 +33,26 @@ html{
   margin: 0 2rem ;
 }
 
+/* -- LOGIN PAGE -- */
+
+#passwordPrompt{
+  margin: 0;
+  padding: 0;
+}
+
+#loginLayout{
+  padding:2rem;
+  border: white solid 1px;
+  width: fit-content;
+}
+
+#loginPage{
+  display: flex;
+  justify-content: center;
+  margin-top: 12.5%;
+}
+
+/* -- asdas -- */
 
 
 
