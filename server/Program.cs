@@ -140,5 +140,12 @@ app.MapPost("/api/register", async (HttpContext context) =>
     queries.registerNewUser(UserData);
 });
 
+app.MapGet("/api/blogpost", async (HttpContext context) =>
+{
+    Console.WriteLine("Program.cs");
+    var posts = await queries.GetBlogPosts();
+    return posts;
+});
+
 
 app.Run();

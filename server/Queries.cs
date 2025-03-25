@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Data;
+using System.Text.Json;
 using Npgsql;
 using server.Classes;
 
@@ -74,5 +75,24 @@ public class Queries
         
         await cmd.ExecuteNonQueryAsync();
         return Results.Ok();
+    }
+
+    public async Task<List<BlogPost>> GetBlogPosts()
+    {
+        var blogPosts = new List<BlogPost>();
+        Console.WriteLine("queries");
+        const string sql = @"SELECT header, post, time FROM posts";
+        await using var cmd = _db.CreateCommand(sql);
+        await using var reader = await cmd.ExecuteReaderAsync();
+        while (await reader.ReadAsync())
+        {
+            blogPosts.Add(new BlogPost()
+            { 
+                Header = reader.GetString(reader.GetOrdinal("header")),
+                Post = reader.GetString(reader.GetOrdinal("post")),
+                Timestamp = reader.GetDateTime(reader.GetOrdinal("time"))
+            });
+        }
+        return blogPosts;
     }
 }
