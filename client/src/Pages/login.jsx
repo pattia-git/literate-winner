@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../Components/AuthContext.jsx"; // Import auth context
+import { AuthContext } from "../Components/AuthContext.jsx";
 
 export const Login = () => {
     const [email, setEmail] = useState('');
@@ -18,7 +18,7 @@ export const Login = () => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
-                body: JSON.stringify({ Email: email, Password: password })
+                body: JSON.stringify({ Email: email})
             });
 
             const data = await response.json();

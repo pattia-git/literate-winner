@@ -1,58 +1,99 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 /* -- General elements -- */
-h1{
-  margin: 0;
-  font-size: 3rem;
-  text-align: center;
-}
-body{
-  margin: 0;
-  padding: 0;
-  
+h1 {
+    margin: 0;
+    font-size: 3rem;
+    text-align: center;
 }
 
-html{
-  overflow-y: scroll;
+body {
+    margin: 0;
+    padding: 0;
+
 }
 
-#Page{
-  margin: 0 2rem ;
+html {
+    overflow-y: scroll;
+}
+
+#Page {
+    margin: 0 2rem;
 }
 
 /* -- LOGIN PAGE -- */
 
-#passwordPrompt{
-  margin: 0;
-  padding: 0;
+#passwordPrompt {
+    margin: 0;
+    padding: 0;
 }
 
-#loginLayout{
-  padding:2rem;
-  border: white solid 1px;
-  width: fit-content;
+#loginLayout {
+    padding: 2rem;
+    border: white solid 1px;
+    width: fit-content;
 }
 
-#loginPage{
-  display: flex;
-  justify-content: center;
-  margin-top: 12.5%;
+#loginPage {
+    display: flex;
+    justify-content: center;
+    margin-top: 12.5%;
 }
 
 /* -- asdas -- */
 
+/* -- Comment area -- */
+#CommentTextArea {
+    resize: none;
+    width: 100%;
+}
 
+#CommentLayout {
+    display: flex;
+    justify-content: end;
+    width: 100%;
+}
+
+#CommentSendBtn{
+    width: 30%;
+}
+
+/* -- Blog post -- */
+
+#Postlayout{
+    margin-top: 2%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+
+}
+
+#singlePost{
+    background-color: white;
+    width: 45%;
+    border-radius: 8px;
+    padding: 2%;
+    margin-bottom: 2%;
+}
+
+#postHeader{
+    color: black;
+}
+
+#postContent{
+    color: black;
+}
 

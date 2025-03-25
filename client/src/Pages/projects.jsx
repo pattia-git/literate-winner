@@ -1,7 +1,6 @@
 ﻿import React from "react";
 
-export const Projects = async () => {
-    
+export const Projects = (e) => {
     
     return(
         <div id="Page">
