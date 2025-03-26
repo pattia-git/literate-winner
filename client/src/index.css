@@ -91,9 +91,29 @@ html {
 
 #postHeader{
     color: black;
+    margin: 0;
+    padding: 0;
 }
 
 #postContent{
     color: black;
+}
+
+/* -- New blog post css -- */
+
+#newPostLayout{
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+}
+
+#contentField{
+    width: 100%;
+    height: 20rem;
+    resize: none;
+}
+
+#newPostBtn{
+    width: 10%;
 }
 

@@ -1,13 +1,30 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../Components/AuthContext.jsx";
+import bcrypt from "bcryptjs";
 
 export const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [data, setData] = useState('');
     const [error, setError] = useState(null);
     const navigate = useNavigate();
     const { updateUser } = useContext(AuthContext); // Use context
+    
+    const handleLogin = async (e) => {
+        const LoginResponse = await fetch('/api/setSession', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ Email: email})
+        });
+            updateUser();
+            navigate("/")
+            // Need to fetch more information from backend to 
+            // redirect user to correct page:
+        
+            // navigate(LoginResponse.user.role === "ADMIN" ? "/Admin" : "/");
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -22,15 +39,14 @@ export const Login = () => {
             });
 
             const data = await response.json();
-            console.log('Login Response:', data);
-
-            if (response.ok) {
-                console.log("Login successful");
-                updateUser();
-                navigate(data.user.role === "ADMIN" ? "/Admin" : "/");
-            } else {
-                setError(data.message || "Invalid login credentials");
+            
+            var test = await bcrypt.compare(password, data.user.password);
+            if(test == true){
+                handleLogin();
+                return;
             }
+            alert("Something went wrong")
+            
         } catch (err) {
             setError("An error occurred. Please try again.");
             console.error("Login error:", err);

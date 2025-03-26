@@ -1,6 +1,7 @@
 ﻿
 import Comment from "../Components/comment.jsx"
 import React, { useState, useContext, useEffect } from "react";
+import { NavLink } from "react-router-dom";
 export const Blog = () => {
     const [data, setData] = useState([]);
 
@@ -33,6 +34,7 @@ export const Blog = () => {
                     ) : null} {}
                     
                 </div>
+                <NavLink to="/blog/New-post" id="Link">new post</NavLink>
             </div>
         </div>
     );

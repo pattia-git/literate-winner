@@ -17,7 +17,9 @@ export const Register = () => {
         if (tempPassword === verifyPassword) {
             
             const salt = await bcrypt.genSalt(10);
+            console.log(salt)
             const password = await bcrypt.hash(tempPassword, salt);
+            console.log(password)
             
             const response = await fetch('/api/register', {
                 method: 'POST',

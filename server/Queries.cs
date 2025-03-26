@@ -14,23 +14,17 @@ public class Queries
         _db = db;
     }
 
-    public async Task<User?> ValidateUser(string email, string password)
+    public async Task<User?> ValidateUser(string email)
     {
         const string sql =
-            @"SELECT users.id, users.firstname, users.lastname, users.email, r.role, users.username, users.password FROM users INNER JOIN public.roles r on r.id = users.role WHERE users.email = @email and users.password = @password";
+            @"SELECT users.id, users.firstname, users.lastname, users.email, r.role, users.username, users.password FROM users INNER JOIN public.roles r on r.id = users.role WHERE users.email = @email";
         await using var cmd = _db.CreateCommand(sql);
         cmd.Parameters.AddWithValue("@email", email.ToLower());
-        cmd.Parameters.AddWithValue("@password", password);
             
         {
             await using var reader = await cmd.ExecuteReaderAsync();
             if (await reader.ReadAsync())
             {
-                var storedPassword = reader.GetString(reader.GetOrdinal("password"));
-
-
-                if (password == storedPassword)
-                {
                     var user = new User
                     {
                         Id = reader.GetInt32(reader.GetOrdinal("id")),
@@ -38,11 +32,11 @@ public class Queries
                         Firstname = reader.GetString(reader.GetOrdinal("firstname")),
                         Lastname = reader.GetString(reader.GetOrdinal("lastname")),
                         Username = reader.GetString(reader.GetOrdinal("username")),
-                        Role = reader.GetString(reader.GetOrdinal("role"))
+                        Role = reader.GetString(reader.GetOrdinal("role")),
+                        Password = reader.GetString(reader.GetOrdinal("password"))
                     };
                     Console.WriteLine($"User from DB: {JsonSerializer.Serialize(user)}");
                     return user;
-                }
             }
 
             return null;
@@ -94,5 +88,21 @@ public class Queries
             });
         }
         return blogPosts;
+    }
+
+    public async Task<IResult> newBlogPost(BlogPost postinfo, HttpContext context)
+    {
+        
+        const string sql = @"Insert into posts (user, header, post, time) values (@userid, @header, @content, @timestamp)";
+        await using var cmd = _db.CreateCommand(sql);
+        
+        Console.WriteLine(postinfo.Header);
+        Console.WriteLine(postinfo.Post);
+        cmd.Parameters.AddWithValue("@userid", postinfo.User);
+        cmd.Parameters.AddWithValue("@header", postinfo.Header);
+        cmd.Parameters.AddWithValue("@content", postinfo.Post);
+        cmd.Parameters.AddWithValue("@timestamp", postinfo.Timestamp);
+        await cmd.ExecuteNonQueryAsync();
+        return Results.Ok();
     }
 }

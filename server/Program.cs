@@ -48,41 +48,11 @@ app.MapPost("/api/login", async (HttpContext context) =>
 {
     using var reader = new StreamReader(context.Request.Body);
     var body = await reader.ReadToEndAsync();
-    var loginData = JsonSerializer.Deserialize<LoginRequest>(body);
+    var loginData = JsonSerializer.Deserialize<User>(body);
     
-    var user = await queries.ValidateUser(loginData.Email, loginData.Password);
-            if (user != null) 
-            { 
-                var authProperties = new AuthenticationProperties
-            {
-                IsPersistent = true, // behåller sessionen även om den har stängts 
-                ExpiresUtc = DateTimeOffset.UtcNow.AddHours(24) // sessionen gäller i 24 timmar 
-            };
-            
-            // Skapar en cookie-baserad autentisering för användaren. 
-            await context.SignInAsync(
-                "CookieAuth",  
-                new ClaimsPrincipal(new ClaimsIdentity(
-                    new[] {
-                        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),  //sparar användarens Id
-                        new Claim(ClaimTypes.Email, user.Email), // sparar användarens e-post 
-                        new Claim("role", user.Role),
-                        new Claim("username", user.Username) // sparar om användaren är admin eller inte
-
-                    },
-                    "CookieAuth")),
-                authProperties
-            );
-            
-             // lagrar användarensinformation i sessionen
-            context.Session.SetString("UserId", user.Id.ToString());
-            context.Session.SetString("UserEmail", user.Email);
-            context.Session.SetString("Firstname", user.Firstname);
-            context.Session.SetString("Lastname", user.Lastname);
-            context.Session.SetString("Role", user.Role);
-            context.Session.SetString("Username", user.Username);
-            
-            Console.WriteLine("Queries");
+    var user = await queries.ValidateUser(loginData.Email);
+    if (user != null) { 
+           
             // Retunerar inloggningsdata
             return Results.Ok(new { 
                 user = new {
@@ -91,7 +61,8 @@ app.MapPost("/api/login", async (HttpContext context) =>
                     fname = user.Firstname,
                     lname = user.Lastname,
                     role = user.Role,
-                    username = user.Username 
+                    username = user.Username,
+                    password = user.Password
                 }
             });
     }
@@ -99,6 +70,42 @@ app.MapPost("/api/login", async (HttpContext context) =>
 }
     
     );
+
+
+app.MapPost("/api/setSession", async (HttpContext context) =>
+{
+    using var reader = new StreamReader(context.Request.Body);
+    var body = await reader.ReadToEndAsync();
+    var loginData = JsonSerializer.Deserialize<User>(body);
+
+    var user = await queries.ValidateUser(loginData.Email);
+    var authProperties = new AuthenticationProperties
+{
+    IsPersistent = true, // behåller sessionen även om den har stängts
+    ExpiresUtc = DateTimeOffset.UtcNow.AddHours(24) // sessionen gäller i 24 timmar
+};
+// Skapar en cookie-baserad autentisering för användaren.
+ await context.SignInAsync(
+    "CookieAuth",
+    new ClaimsPrincipal(new ClaimsIdentity(
+        new[] {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),  //sparar användarens Id
+            new Claim(ClaimTypes.Email, user.Email), // sparar användarens e-post
+            new Claim("role", user.Role),
+            new Claim("username", user.Username) // sparar om användaren är admin eller inte
+        },
+        "CookieAuth")),
+    authProperties
+);
+ 
+ // lagrar användarensinformation i sessionen
+context.Session.SetString("UserId", user.Id.ToString());
+context.Session.SetString("UserEmail", user.Email);
+context.Session.SetString("Firstname", user.Firstname);
+context.Session.SetString("Lastname", user.Lastname);
+context.Session.SetString("Role", user.Role);
+context.Session.SetString("Username", user.Username);
+});
 
 app.MapGet("/api/checksession", async (HttpContext context) =>
 {
@@ -142,9 +149,25 @@ app.MapPost("/api/register", async (HttpContext context) =>
 
 app.MapGet("/api/blogpost", async (HttpContext context) =>
 {
-    Console.WriteLine("Program.cs");
     var posts = await queries.GetBlogPosts();
     return posts;
+});
+
+app.MapPost("/api/newBlogPost", async (HttpContext context) =>
+{
+    using var reader = new StreamReader(context.Request.Body);
+    var body = await reader.ReadToEndAsync();
+    var newPost = JsonSerializer.Deserialize<BlogPost>(body);
+    
+    
+    // Can't fetch the userid from the session. Need a fix!!!!
+    newPost.Timestamp = DateTime.Now;
+    newPost.User =  context.Session.GetInt32("id");
+    
+    Console.WriteLine(newPost.User);
+
+    await queries.newBlogPost(newPost, context);
+    return Results.Ok();
 });
 
 

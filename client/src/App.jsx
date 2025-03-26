@@ -12,6 +12,7 @@ import {MyPage} from "./Pages/myPage.jsx"
 import {Admin} from "./Pages/admin.jsx"
 import {Register} from "./Pages/register.jsx"
 import {AuthProvider} from "./Components/AuthContext.jsx"
+import {NewBlogPost} from "./Pages/newBlogPost.jsx"
 
 function App() {
 
@@ -29,6 +30,7 @@ function App() {
             <Route path="/myPage" element={<MyPage />} />
             <Route path="/Admin" element={<Admin />} />
             <Route path="/register" element={<Register/>} />
+            <Route path="/blog/New-post" element={<NewBlogPost/>}/>
           </Routes>
         </AuthProvider>
   )
