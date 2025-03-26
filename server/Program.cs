@@ -162,9 +162,7 @@ app.MapPost("/api/newBlogPost", async (HttpContext context) =>
     
     // Can't fetch the userid from the session. Need a fix!!!!
     newPost.Timestamp = DateTime.Now;
-    newPost.User =  context.Session.GetInt32("id");
-    
-    Console.WriteLine(newPost.User);
+    newPost.User = context.Session.GetString("UserId");
 
     await queries.newBlogPost(newPost, context);
     return Results.Ok();

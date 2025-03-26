@@ -54,8 +54,6 @@ public class Queries
 
     public async Task<IResult> registerNewUser(User user)
     {
-        Console.WriteLine("queries");
-        Console.WriteLine(user.Password);
         const string sql =
             @"INSERT INTO users (firstname, lastname, email, role, username, password) 
                 values (@firstname, @lastname, @email, @role, @username, @password)";
@@ -74,8 +72,7 @@ public class Queries
     public async Task<List<BlogPost>> GetBlogPosts()
     {
         var blogPosts = new List<BlogPost>();
-        Console.WriteLine("queries");
-        const string sql = @"SELECT header, post, time FROM posts";
+        const string sql = @"SELECT header, post, time, users.username FROM posts Inner Join users on posts.id = users.id";
         await using var cmd = _db.CreateCommand(sql);
         await using var reader = await cmd.ExecuteReaderAsync();
         while (await reader.ReadAsync())
@@ -84,7 +81,8 @@ public class Queries
             { 
                 Header = reader.GetString(reader.GetOrdinal("header")),
                 Post = reader.GetString(reader.GetOrdinal("post")),
-                Timestamp = reader.GetDateTime(reader.GetOrdinal("time"))
+                Timestamp = reader.GetDateTime(reader.GetOrdinal("time")),
+                Author = reader.GetString(reader.GetOrdinal("username"))
             });
         }
         return blogPosts;
@@ -92,13 +90,11 @@ public class Queries
 
     public async Task<IResult> newBlogPost(BlogPost postinfo, HttpContext context)
     {
-        
-        const string sql = @"Insert into posts (user, header, post, time) values (@userid, @header, @content, @timestamp)";
+        const string sql = @"Insert into posts (author, header, post, time) values (@userid, @header, @content, @timestamp)";
         await using var cmd = _db.CreateCommand(sql);
         
-        Console.WriteLine(postinfo.Header);
-        Console.WriteLine(postinfo.Post);
-        cmd.Parameters.AddWithValue("@userid", postinfo.User);
+
+        cmd.Parameters.AddWithValue("@userid", Convert.ToInt32(postinfo.User));
         cmd.Parameters.AddWithValue("@header", postinfo.Header);
         cmd.Parameters.AddWithValue("@content", postinfo.Post);
         cmd.Parameters.AddWithValue("@timestamp", postinfo.Timestamp);
