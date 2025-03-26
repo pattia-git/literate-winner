@@ -1,9 +1,9 @@
 ﻿import React, { useState, useContext, useEffect } from "react";
-
+import { AuthContext } from "../Components/AuthContext.jsx";
 
 
 export const NewBlogPost = () => {
-    
+    const { user } = useContext(AuthContext);
     const [header, setheader] = useState('');
     const [content, setcontent] = useState('');
     
@@ -38,7 +38,7 @@ export const NewBlogPost = () => {
                             onChange={(e) => setcontent(e.target.value)}
                         />
                     </form>
-                    <button id="newPostBtn" onClick={handleSubmit}>Post this</button>
+                    <button id="publishArticlebtn" onClick={handleSubmit}>Post this</button>
                 </div>
             </div>
 

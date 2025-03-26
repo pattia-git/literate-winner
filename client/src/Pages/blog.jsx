@@ -22,20 +22,22 @@ export const Blog = () => {
 
     return (
         <div id="Page">
-            <div>
                 <div id="Postlayout">
                     {data.length > 0 ? (
                         data.map((item, index) => (
                             <div key={index} id="singlePost">
                                 <h3 id="postHeader">{item.header}</h3>
                                 <p id="postContent">{item.post}</p>
+                                <p id="postAuthor">Author: {item.author}</p>
                             </div>
                         ))
                     ) : null} {}
                     
                 </div>
-                <NavLink to="/blog/New-post" id="Link">new post</NavLink>
+            <div id="ContentAfterArticles">
+                <NavLink to="/blog/New-post" id="newPostBtn">New post</NavLink>
             </div>
+                
         </div>
     );
 };
